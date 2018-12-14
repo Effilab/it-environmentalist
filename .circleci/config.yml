@@ -1,0 +1,89 @@
+---
+version: 2.1
+jobs:
+  build:
+    docker:
+      - image: circleci/ruby:2.5.3
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - v1-bundle-{{ checksum "Gemfile.lock" }}
+            - v1-bundle-
+
+      - run:
+          name: Install gems
+          command: |
+            bundle install --jobs=4 --retry=3 --path vendor/bundle
+
+      - save_cache:
+          key: v1-bundle-{{ checksum "Gemfile.lock" }}
+          paths:
+            - ./vendor/bundle
+
+      - run:
+          name: Lint codebase
+          command: |
+            bundle exec rubocop
+
+      - restore_cache:
+          keys:
+            - v1-coverage-{{ .Branch }}-
+
+      - run:
+          name: Run tests
+          command: |
+            mkdir /tmp/test-results
+            COVERAGE=true \
+              bundle exec rspec \
+                --format progress \
+                --format RspecJunitFormatter \
+                --out /tmp/test-results/rspec.xml
+
+      - save_cache:
+          key: v1-coverage-{{ .Branch }}-{{ epoch }}
+          paths:
+            - ./coverage
+
+      - store_test_results:
+          path: /tmp/test-results
+
+      - store_artifacts:
+          path: /tmp/test-results
+          destination: test-results
+
+  mirror-to-gitlab:
+    docker:
+      - image: circleci/ruby:2.5.3
+
+    steps:
+      - checkout
+
+      - run:
+          name: Push repository to its mirror on Gitlab
+          command: |
+            git config user.name "$GITLAB_USERNAME"
+            git config user.email "$GITLAB_USERNAME@effilab-local.com"
+            git remote add gitlab "https://${GITLAB_USERNAME}:${GITLAB_PASSWORD}@git.effilab-local.com/github/${CIRCLE_PROJECT_REPONAME}.git"
+            git push --force gitlab "HEAD:$CIRCLE_BRANCH"
+
+workflows:
+  version: 2
+  build-mirror:
+    jobs:
+      - build
+      - mirror-to-gitlab:
+          name: mirror-to-gitlab-develop
+          filters:
+            branches:
+              ignore:
+                - master
+      - mirror-to-gitlab:
+          name: mirror-to-gitlab-master
+          requires: [build]
+          filters:
+            branches:
+              only:
+                - master

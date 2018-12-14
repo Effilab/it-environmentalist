@@ -1,0 +1,80 @@
+require: rubocop-rspec
+
+Metrics/BlockLength:
+  Exclude:
+    - "spec/environmentalist/**/*"
+
+Metrics/LineLength:
+  Max: 120
+
+Metrics/MethodLength:
+  Max: 20
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+
+Style/StringLiteralsInInterpolation:
+  EnforcedStyle: double_quotes
+
+Style/FormatStringToken:
+  Severity: convention
+
+Style/Documentation:
+  Enabled: false
+
+Style/IfUnlessModifier:
+  Enabled: false
+
+Style/EmptyMethod:
+  EnforcedStyle: expanded
+
+Style/GuardClause:
+  Enabled: false
+
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: comma
+
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: comma
+
+Style/TrailingCommaInArguments:
+  Enabled: false
+
+Style/WordArray:
+  Enabled: false
+
+Style/SymbolProc:
+  Enabled: false
+
+RSpec/NamedSubject:
+  Enabled: false
+
+RSpec/DescribeClass:
+  Enabled: false
+
+RSpec/MultipleExpectations:
+  Max: 3
+
+RSpec/LeadingSubject:
+  Enabled: false
+
+RSpec/ExampleLength:
+  Max: 20
+
+RSpec/MessageSpies:
+  Enabled: false
+
+RSpec/SubjectStub:
+  Enabled: false
+
+RSpec/NestedGroups:
+  Max: 6
+
+RSpec/VerifiedDoubles:
+  Severity: warning
+
+AllCops:
+  Exclude:
+    - "bin/rspec"
+    - "bin/rubocop"
+    - "vendor/bundle/**/*"
