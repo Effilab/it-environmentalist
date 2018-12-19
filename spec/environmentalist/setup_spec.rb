@@ -40,4 +40,15 @@ RSpec.describe Environmentalist::Setup do
       subject.call(env)
     end.to raise_error(/ENV inconsistency/)
   end
+
+  it "warns about missing values in the input" do
+    env = {
+      "RAILS_ENV" => "production",
+      "RELEASE_ENV" => "",
+    }
+
+    expect do
+      subject.call(env)
+    end.to raise_error(/RELEASE_ENV must be set/)
+  end
 end

@@ -49,7 +49,13 @@ module Environmentalist
         raise "ENV inconsistency: RAILS_ENV=#{rails_env} RACK_ENV=#{rack_env}"
       end
 
-      env["RELEASE_ENV"] = "development" if blank?(release_env)
+      if blank?(release_env)
+        if rails_env == "production"
+          raise ArgumentError, "RELEASE_ENV must be set when RAILS_ENV=production"
+        else
+          env["RELEASE_ENV"] = rails_env
+        end
+      end
 
       env
     end
