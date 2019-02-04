@@ -7,5 +7,8 @@
 /spec/reports/
 /tmp/
 
+# dependencies managed by the gemspec
+Gemfile.lock
+
 # rspec examples tracking
 spec/examples.txt
