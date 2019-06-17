@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   build:
     docker:
-      - image: circleci/ruby:2.6.1
+      - image: circleci/ruby:2.6.3
 
     steps:
       - checkout
@@ -53,37 +53,3 @@ jobs:
       - store_artifacts:
           path: /tmp/test-results
           destination: test-results
-
-  mirror-to-gitlab:
-    docker:
-      - image: circleci/ruby:2.6.1
-
-    steps:
-      - checkout
-
-      - run:
-          name: Push repository to its mirror on Gitlab
-          command: |
-            git config user.name "$GITLAB_USERNAME"
-            git config user.email "$GITLAB_USERNAME@effilab-local.com"
-            git remote add gitlab "https://${GITLAB_USERNAME}:${GITLAB_PASSWORD}@git.effilab-local.com/github/${CIRCLE_PROJECT_REPONAME}.git"
-            git push --force gitlab "HEAD:$CIRCLE_BRANCH"
-
-workflows:
-  version: 2
-  build-mirror:
-    jobs:
-      - build
-      - mirror-to-gitlab:
-          name: mirror-to-gitlab-develop
-          filters:
-            branches:
-              ignore:
-                - master
-      - mirror-to-gitlab:
-          name: mirror-to-gitlab-master
-          requires: [build]
-          filters:
-            branches:
-              only:
-                - master
