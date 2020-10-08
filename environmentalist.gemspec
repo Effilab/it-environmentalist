@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = %(Environment setup for Effilab IT applications)
   spec.homepage      = %(https://github.com/effilab/it-environmentalist)
-  spec.required_ruby_version = '~> 2.7'
+  spec.required_ruby_version = "~> 2.7"
 
   # Prevent pushing this gem to RubyGems.org.
   spec.metadata["allowed_push_host"] = ""

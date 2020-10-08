@@ -31,8 +31,8 @@ module Environmentalist
       end
     end
 
-    def self.find_and_parse(env)
-      find(env).each { |path| parse(path) { |k, v| yield(k, v) } }
+    def self.find_and_parse(env, &block)
+      find(env).each { |path| parse(path, &block) }
     end
   end
 end

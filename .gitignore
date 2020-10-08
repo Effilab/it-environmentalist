@@ -6,6 +6,7 @@
 /pkg/
 /spec/reports/
 /tmp/
+/vendor/
 
 # dependencies managed by the gemspec
 Gemfile.lock
